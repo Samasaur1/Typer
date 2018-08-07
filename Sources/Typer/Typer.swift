@@ -8,7 +8,7 @@ public final class Typer {
             for character in text {
                 try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \"\(character)\"'"])
               //usleep(1000000) <- 1 second
-                usleep(0999000)
+                usleep(0020000)
             }
             DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) { print("Success!'") }
         } catch let error as ShellOutError {
