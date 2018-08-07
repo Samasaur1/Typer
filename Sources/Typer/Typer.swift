@@ -5,7 +5,7 @@ public final class Typer {
     private init() {}
     public static func type(_ text: String) {
         do {
-            try shellOut(to: "osascript", arguments: ["-e", "tell application \"System Events\" to keystroke \"\(text)\""])
+            try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \"\(text)\"'"])
             print("Success!'")
         } catch let error as ShellOutError {
             print(error.message)
