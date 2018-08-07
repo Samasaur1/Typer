@@ -6,6 +6,7 @@ public final class Typer {
     public static func type(_ text: String) {
         do {
             try shellOut(to: "osascript", arguments: ["-e", "tell application \"System Events\" to keystroke \"\(text)\""])
+            print("Success!'")
         } catch let error as ShellOutError {
             print(error.message)
             print(error.output)
