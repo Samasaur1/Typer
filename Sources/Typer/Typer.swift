@@ -11,7 +11,7 @@ public final class Typer {
             for character in text {
                 var toPrint: String
                 if character == "'" {
-                    toPrint = "\\'"
+                    toPrint = "\"'''\""
                 } else if character == "\n" || character == "\r" {
                     toPrint = "return"
                 } else if character == "\t" {
