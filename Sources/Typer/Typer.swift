@@ -3,7 +3,7 @@ import ShellOut
 
 public final class Typer {
     private init() {}
-    public static func type(_ text: String) {
+    public static func type(_ text: String, typing: Type = .natural) {
         do {
             for character in text {
                 var toPrint: String
@@ -17,6 +17,18 @@ public final class Typer {
                     toPrint = "\"\(character)\""
                 }
                 try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
+                switch typing {
+                case .allAtOnce:
+                    usleep(0001000)
+                case .consistent:
+                    usleep(0020000)
+                case .natural:
+                    let rand = arc4random()
+                    var sleepTime = rand % 5
+                    sleepTime *= 1000
+                    usleep(0018000 + sleepTime)
+                    break
+                }
               //usleep(1000000) <- 1 second
                 usleep(0020000)
             }
@@ -26,5 +38,10 @@ public final class Typer {
         } catch {
             fatalError("This is really bad: Unknown error")
         }
+    }
+    public enum Type {
+        case allAtOnce
+        case consistent
+        case natural
     }
 }
