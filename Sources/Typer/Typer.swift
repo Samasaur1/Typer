@@ -1,7 +1,4 @@
 import Foundation
-#if os(Linux)
-    import Glibc
-#endif
 import ShellOut
 
 public final class Typer {
@@ -35,7 +32,7 @@ public final class Typer {
                             srandom(UInt32(time(nil)))
                             initialized = true
                         }
-                        let rand = random()
+                        let rand = UInt32(random())
                     #else
                         let rand = arc4random()
                     #endif
