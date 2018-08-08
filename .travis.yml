@@ -16,4 +16,4 @@ install:
 - swiftenv install "$SWIFT_VERSION" || true
 - swift --version
 script:
-- swift test
+- swift build

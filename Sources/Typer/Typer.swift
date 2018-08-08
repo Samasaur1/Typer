@@ -1,9 +1,15 @@
 import Foundation
+#if os(Linux)
+    import Glibc
+#endif
 import ShellOut
 
 public final class Typer {
     private init() {}
-    public static func type(_ text: String, typing: Rate = .natural, printAlongWith print: Bool = false) {
+    #if os(Linux)
+        static var initialized = false
+    #endif
+    public static func type(_ text: String, typing: Rate = .natural, printAlongWith printing: Bool = false) {
         do {
             for character in text {
                 var toPrint: String
@@ -17,14 +23,22 @@ public final class Typer {
                     toPrint = "\"\(character)\""
                 }
                 try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
-                if print { print(toPrint) }
+                if printing { print(toPrint) }
                 switch typing {
                 case .allAtOnce:
                     usleep(0001000)
                 case .consistent:
                     usleep(0020000)
                 case .natural:
-                    let rand = arc4random()
+                    #if os(Linux)
+                        if !initialized {
+                            srandom(UInt32(time(nil)))
+                            initialized = true
+                        }
+                        let rand = random()
+                    #else
+                        let rand = arc4random()
+                    #endif
                     var sleepTime = rand % 5
                     sleepTime *= 15000
                     usleep(0020000 + sleepTime)
