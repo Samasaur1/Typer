@@ -25,8 +25,8 @@ public final class Typer {
                 case .natural:
                     let rand = arc4random()
                     var sleepTime = rand % 5
-                    sleepTime *= 10000
-                    usleep(0030000 + sleepTime)
+                    sleepTime *= 15000
+                    usleep(0020000 + sleepTime)
                 }
               //usleep(1000000) <- 1 second
 //                usleep(0020000)
