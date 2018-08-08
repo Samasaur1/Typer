@@ -16,6 +16,8 @@ public final class Typer {
                     toPrint = "return"
                 } else if character == "\t" {
                     toPrint = "tab"
+                } else if character == "\\" {
+                    toPrint = "\"\\\""
                 } else {
                     toPrint = "\"\(character)\""
                 }
@@ -46,6 +48,7 @@ public final class Typer {
         } catch let error as ShellOutError {
             print(error.message)
             print(error.output)
+            exit(1)
         } catch {
             fatalError("This is really bad: Unknown error")
         }
