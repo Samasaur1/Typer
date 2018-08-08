@@ -3,7 +3,7 @@ import ShellOut
 
 public final class Typer {
     private init() {}
-    public static func type(_ text: String, typing: Rate = .natural) {
+    public static func type(_ text: String, typing: Rate = .natural, printAlongWith print: Bool = false) {
         do {
             for character in text {
                 var toPrint: String
@@ -17,6 +17,7 @@ public final class Typer {
                     toPrint = "\"\(character)\""
                 }
                 try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
+                if print { print(toPrint) }
                 switch typing {
                 case .allAtOnce:
                     usleep(0001000)
