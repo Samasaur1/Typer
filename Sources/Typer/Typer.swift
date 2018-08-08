@@ -3,7 +3,7 @@ import ShellOut
 
 public final class Typer {
     private init() {}
-    public static func type(_ text: String, typing: Type = .natural) {
+    public static func type(_ text: String, typing: Rate = .natural) {
         do {
             for character in text {
                 var toPrint: String
@@ -25,8 +25,8 @@ public final class Typer {
                 case .natural:
                     let rand = arc4random()
                     var sleepTime = rand % 5
-                    sleepTime *= 1000
-                    usleep(0018000 + sleepTime)
+                    sleepTime *= 5000
+                    usleep(0010000 + sleepTime)
                     break
                 }
               //usleep(1000000) <- 1 second
@@ -39,7 +39,7 @@ public final class Typer {
             fatalError("This is really bad: Unknown error")
         }
     }
-    public enum Type {
+    public enum Rate {
         case allAtOnce
         case consistent
         case natural
