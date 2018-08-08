@@ -25,12 +25,11 @@ public final class Typer {
                 case .natural:
                     let rand = arc4random()
                     var sleepTime = rand % 5
-                    sleepTime *= 5000
-                    usleep(0010000 + sleepTime)
-                    break
+                    sleepTime *= 10000
+                    usleep(0030000 + sleepTime)
                 }
               //usleep(1000000) <- 1 second
-                usleep(0020000)
+//                usleep(0020000)
             }
         } catch let error as ShellOutError {
             print(error.message)
