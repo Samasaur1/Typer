@@ -5,8 +5,12 @@ public final class Typer {
     #if os(Linux)
         static var initialized = false
     #endif
-    public static func type(_ text: String, typing: Rate = .natural, printAlongWith printing: Bool = false) {
+    public static func type(_ text: String, typing: Rate = .natural, printAlongWith printing: Bool = false, debug: Bool = false) {
         for character in text {
+            if debug {
+                print("Character:")
+                print(character)
+            }
             var toPrint: String
             if character == "'" {
                 toPrint = "\"'\"'\"'\""
@@ -21,9 +25,17 @@ public final class Typer {
             } else {
                 toPrint = "\"\(character)\""
             }
+            if debug {
+                print("toPrint:")
+                print(toPrint)
+            }
             let p = Process()
             p.launchPath = "/usr/bin/osascript"
             p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
+            if debug {
+                print("Shell command:")
+                print("/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \(toPrint)'")
+            }
             p.launch()
             p.waitUntilExit()
             if printing { print(toPrint) }
@@ -44,6 +56,9 @@ public final class Typer {
                 #endif
                 var sleepTime = rand % 5
                 sleepTime *= 15000
+                if debug {
+                    print("Sleeping for \(0020000 + sleepTime) µseconds")
+                }
                 usleep(0020000 + sleepTime)
             }
             //usleep(1000000) <- 1 second
