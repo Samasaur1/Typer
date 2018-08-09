@@ -17,7 +17,9 @@ public final class Typer {
                 } else if character == "\t" {
                     toPrint = "tab"
                 } else if character == "\\" {
-                    toPrint = "\"\\\\\""
+                    toPrint = "\"\\\""
+                } else if character == "\"" {
+                    toPrint = "'\"'\\\"'\"'"
                 } else {
                     toPrint = "\"\(character)\""
                 }
