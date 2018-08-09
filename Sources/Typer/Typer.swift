@@ -29,15 +29,30 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-            let p = Process()
-            p.launchPath = "/usr/bin/osascript"
-            p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
+//            let p = Process()
+//            p.launchPath = "/usr/bin/osascript"
+//            p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
             if debug {
                 print("Shell command:")
                 print("/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \(toPrint)'")
             }
-            p.launch()
-            p.waitUntilExit()
+//            p.launch()
+//            p.waitUntilExit()
+            do {
+                if #available(OSX 10.13, *) {
+                    try Process.run(URL(fileURLWithPath: "/usr/bin/osascript"), arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
+                } else {
+                    let p = Process()
+                    p.launchPath = "/usr/bin/osascript"
+                    p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
+                    p.launch()
+                    p.waitUntilExit()
+                }
+            } catch let error {
+                print(error)
+                print(error.localizedDescription)
+                exit(1)
+            }
             if printing { print(toPrint) }
             switch typing {
             case .allAtOnce:
