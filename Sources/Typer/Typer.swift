@@ -23,7 +23,12 @@ public final class Typer {
                 } else {
                     toPrint = "\"\(character)\""
                 }
-                try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
+//                try shellOut(to: "osascript", arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
+                let p = Process()
+                p.launchPath = "/usr/bin/osascript"
+                p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
+                p.launch()
+                p.waitUntilExit()
                 if printing { print(toPrint) }
                 switch typing {
                 case .allAtOnce:
