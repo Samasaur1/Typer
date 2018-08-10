@@ -23,7 +23,7 @@ public final class Typer {
             } else if character == "\"" {
                 toPrint = "\"\\\"\""
             } else {
-                toPrint = "\(character)"
+                toPrint = "\"\(character)\""
             }
             if debug {
                 print("toPrint:")
