@@ -30,11 +30,23 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-            let p = Process()
-            p.launchPath = "/usr/bin/osascript"
-            p.arguments = ["-e", "\"tell application \\\"System Events\\\" to keystroke \(toPrint)"]
-            p.launch()
-            p.waitUntilExit()
+            let echo = Process()
+            echo.launchPath = "/bin/echo"
+            echo.arguments = ["""
+            "tell application \\"System Events\\" to keystroke \(toPrint)" > /tmp/typer
+            """]
+            echo.launch()
+            let compile = Process()
+            compile.launchPath = "/usr/bin/osacompile"
+            compile.arguments = ["/tmp/typer"]
+            echo.waitUntilExit()
+            compile.launch()
+            let execute = Process()
+            execute.launchPath = "/usr/bin/osascript"
+            execute.arguments = ["/tmp/typer"]
+            compile.waitUntilExit()
+            execute.launch()
+            execute.waitUntilExit()
             if printing { print(toPrint) }
             switch typing {
             case .allAtOnce:
