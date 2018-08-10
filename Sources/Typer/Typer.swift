@@ -1,4 +1,5 @@
 import Foundation
+import ShellOut
 
 public final class Typer {
     private init() {}
@@ -13,15 +14,15 @@ public final class Typer {
             }
             var toPrint: String
             if character == "'" {
-                toPrint = "\\\\\"'\\\\\""
+                toPrint = "\\\"'\\\""
             } else if character == "\n" || character == "\r" {
                 toPrint = "return"
             } else if character == "\t" {
                 toPrint = "tab"
             } else if character == "\\" {
-                toPrint = "\\\\\"\\\\\\\\\""
+                toPrint = "\\\"\\\\\\\\\\\""
             } else if character == "\"" {
-                toPrint = "\\\\\"\\\\\\\\\"\\\\\""
+                toPrint = "\\\"\\\\\\\"\\\""
             } else {
                 toPrint = "\\\\\"\(character)\\\\\""
             }
@@ -29,29 +30,17 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-//            let p = Process()
-//            p.launchPath = "/usr/bin/osascript"
-//            p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
+            var osascriptCommand = """
+            "tell application "System Events" to keystroke \(toPrint)"
+            """
             if debug {
                 print("Shell command:")
-                print("/usr/bin/osascript -e \"tell application \\\"System Events\\\" to keystroke \(toPrint)\"")
+                print("/bin/bash -c \"\(osascriptCommand)\"")
+                print("AppleScript (osascript) command:")
+                print(osascriptCommand)
             }
-//            p.launch()
-//            p.waitUntilExit()
             do {
-                if #available(OSX 10.13, *) {
-                    try Process.run(URL(fileURLWithPath: "/usr/bin/osascript"), arguments: ["-e", """
-"tell application \\"System Events\\" to keystroke \(toPrint)"
-"""])
-                } else {
-                    let p = Process()
-                    p.launchPath = "/usr/bin/osascript"
-                    p.arguments = ["-e", """
-"tell application \\"System Events\\" to keystroke \(toPrint)"
-"""]
-                    p.launch()
-                    p.waitUntilExit()
-                }
+                try shellOut(to: "osascript", arguments: ["-e", osascriptCommand])
             } catch let error {
                 print("Error")
                 print(error)

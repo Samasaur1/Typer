@@ -8,8 +8,11 @@ let package = Package(
     products: [
         .library(name: "Typer", targets: ["Typer"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/JohnSundell/ShellOut", from: "2.1.0"),
+    ],
     targets: [
-        .target(name: "Typer", dependencies: []),
+        .target(name: "Typer", dependencies: ["ShellOut"]),
         .testTarget(name: "TyperTests", dependencies: ["Typer"]),
     ]
 )
