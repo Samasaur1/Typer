@@ -14,15 +14,15 @@ public final class Typer {
             }
             var toPrint: String
             if character == "'" {
-                toPrint = "'"
+                toPrint = "\"'\"'\"'\""
             } else if character == "\n" || character == "\r" {
                 toPrint = "return"
             } else if character == "\t" {
                 toPrint = "tab"
             } else if character == "\\" {
-                toPrint = "\\\\\\\\"
+                toPrint = "\"\\\\\""
             } else if character == "\"" {
-                toPrint = "\\\\\\\\\\\\\""
+                toPrint = "\"\\\"\""
             } else {
                 toPrint = "\(character)"
             }
