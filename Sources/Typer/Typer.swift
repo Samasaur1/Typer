@@ -33,7 +33,7 @@ public final class Typer {
             let echo = Process()
             echo.launchPath = "/bin/echo"
             echo.arguments = ["""
-            "tell application \"System Events\" to keystroke \(toPrint)" > /tmp/typer
+            'tell application "System Events" to keystroke \(toPrint)' > /tmp/typer
             """]
             echo.launch()
             let compile = Process()
