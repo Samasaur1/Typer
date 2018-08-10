@@ -30,23 +30,30 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-            let removeOld = Process()
-            removeOld.launchPath = "/bin/rm"
-            removeOld.arguments = ["/tmp/typer"]
-            removeOld.launch()
-            removeOld.waitUntilExit()
-            let touch = Process()
-            touch.launchPath = "/usr/bin/touch"
-            touch.arguments = ["/tmp/typer"]
-            touch.launch()
-            touch.waitUntilExit()
-            let echo = Process()
-            echo.launchPath = "/bin/echo"
-            echo.arguments = ["""
-            'tell application "System Events" to keystroke \(toPrint)' >> /tmp/typer
-            """]
-            echo.launch()
-            echo.waitUntilExit()
+//            let removeOld = Process()
+//            removeOld.launchPath = "/bin/rm"
+//            removeOld.arguments = ["/tmp/typer"]
+//            removeOld.launch()
+//            removeOld.waitUntilExit()
+//            let touch = Process()
+//            touch.launchPath = "/usr/bin/touch"
+//            touch.arguments = ["/tmp/typer"]
+//            touch.launch()
+//            touch.waitUntilExit()
+//            let echo = Process()
+//            echo.launchPath = "/bin/echo"
+//            echo.arguments = ["""
+//            'tell application "System Events" to keystroke \(toPrint)' >> /tmp/typer
+//            """]
+//            echo.launch()
+//            echo.waitUntilExit()
+            do {
+                try Data("tell application \"System Events\" to keystroke \(toPrint)".utf8).write(to: URL(fileURLWithPath: "/tmp/typer"), options: .atomic)
+            } catch let error {
+                print("Error")
+                print(error)
+                print(error.localizedDescription)
+            }
             let compile = Process()
             compile.launchPath = "/usr/bin/osacompile"
             compile.arguments = ["/tmp/typer"]
