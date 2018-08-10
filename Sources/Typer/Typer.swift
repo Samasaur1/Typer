@@ -30,11 +30,16 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
+            let removeOld = Process()
+            removeOld.launchPath = "/bin/rm"
+            removeOld.arguments = ["/tmp/typer"]
+            removeOld.launch()
             let echo = Process()
             echo.launchPath = "/bin/echo"
             echo.arguments = ["""
             'tell application "System Events" to keystroke \(toPrint)' > /tmp/typer
             """]
+            removeOld.waitUntilExit()
             echo.launch()
             let compile = Process()
             compile.launchPath = "/usr/bin/osacompile"
