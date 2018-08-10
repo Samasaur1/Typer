@@ -30,23 +30,11 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-            var osascriptCommand = """
-            \\"tell application \\\\\\"System Events\\\\\\" to keystroke \\\\\\"\(toPrint)\\\\\\"\\"
-            """
-            if debug {
-                print("Shell command:")
-                print("/bin/bash -c \"\(osascriptCommand)\"")
-                print("AppleScript (osascript) command:")
-                print(osascriptCommand)
-            }
-            do {
-                try shellOut(to: "osascript", arguments: ["-e", osascriptCommand])
-            } catch let error {
-                print("Error")
-                print(error)
-                print(error.localizedDescription)
-                exit(1)
-            }
+            let p = Process()
+            p.launchPath = "/usr/bin/osascript"
+            p.arguments = ["-e", "\"tell application \\\"System Events\\\" to keystroke \(toPrint)"]
+            p.launch()
+            p.waitUntilExit()
             if printing { print(toPrint) }
             switch typing {
             case .allAtOnce:
