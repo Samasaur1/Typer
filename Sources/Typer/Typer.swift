@@ -1,5 +1,4 @@
 import Foundation
-import ShellOut
 
 public final class Typer {
     private init() {}
@@ -14,7 +13,7 @@ public final class Typer {
             }
             var toPrint: String
             if character == "'" {
-                toPrint = "\"'\"'\"'\""
+                toPrint = "\"'\""
             } else if character == "\n" || character == "\r" {
                 toPrint = "return"
             } else if character == "\t" {
@@ -30,29 +29,17 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-//            let removeOld = Process()
-//            removeOld.launchPath = "/bin/rm"
-//            removeOld.arguments = ["/tmp/typer"]
-//            removeOld.launch()
-//            removeOld.waitUntilExit()
-//            let touch = Process()
-//            touch.launchPath = "/usr/bin/touch"
-//            touch.arguments = ["/tmp/typer"]
-//            touch.launch()
-//            touch.waitUntilExit()
-//            let echo = Process()
-//            echo.launchPath = "/bin/echo"
-//            echo.arguments = ["""
-//            'tell application "System Events" to keystroke \(toPrint)' >> /tmp/typer
-//            """]
-//            echo.launch()
-//            echo.waitUntilExit()
             do {
                 try Data("tell application \"System Events\" to keystroke \(toPrint)".utf8).write(to: URL(fileURLWithPath: "/tmp/typer"), options: .atomic)
+                if debug {
+                    print("Script Contents:")
+                    print(try String(contentsOf: URL(fileURLWithPath: "/tmp/typer")))
+                }
             } catch let error {
                 print("Error")
                 print(error)
                 print(error.localizedDescription)
+                exit(1)
             }
             let compile = Process()
             compile.launchPath = "/usr/bin/osacompile"
@@ -64,6 +51,12 @@ public final class Typer {
             execute.arguments = ["/tmp/typer"]
             execute.launch()
             execute.waitUntilExit()
+            if !debug {
+                let rm = Process()
+                rm.launchPath = "/bin/rm"
+                rm.arguments = ["/tmp/typer"]
+                rm.launch()
+            }
             if printing { print(toPrint) }
             switch typing {
             case .allAtOnce:
