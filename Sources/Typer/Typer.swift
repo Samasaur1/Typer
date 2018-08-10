@@ -13,17 +13,17 @@ public final class Typer {
             }
             var toPrint: String
             if character == "'" {
-                toPrint = "\"'\"'\"'\""
+                toPrint = "\\\\\"'\\\\\""
             } else if character == "\n" || character == "\r" {
                 toPrint = "return"
             } else if character == "\t" {
                 toPrint = "tab"
             } else if character == "\\" {
-                toPrint = "\"\\\""
+                toPrint = "\\\\\"\\\\\\\\\""
             } else if character == "\"" {
-                toPrint = "\"\\\"\""
+                toPrint = "\\\\\"\\\\\\\\\"\\\\\""
             } else {
-                toPrint = "\"\(character)\""
+                toPrint = "\\\\\"\(character)\\\\\""
             }
             if debug {
                 print("toPrint:")
@@ -34,21 +34,26 @@ public final class Typer {
 //            p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
             if debug {
                 print("Shell command:")
-                print("/usr/bin/osascript -e 'tell application \"System Events\" to keystroke \(toPrint)'")
+                print("/usr/bin/osascript -e \"tell application \\\"System Events\\\" to keystroke \(toPrint)\"")
             }
 //            p.launch()
 //            p.waitUntilExit()
             do {
                 if #available(OSX 10.13, *) {
-                    try Process.run(URL(fileURLWithPath: "/usr/bin/osascript"), arguments: ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"])
+                    try Process.run(URL(fileURLWithPath: "/usr/bin/osascript"), arguments: ["-e", """
+"tell application \\"System Events\\" to keystroke \(toPrint)"
+"""])
                 } else {
                     let p = Process()
                     p.launchPath = "/usr/bin/osascript"
-                    p.arguments = ["-e", "'tell application \"System Events\" to keystroke \(toPrint)'"]
+                    p.arguments = ["-e", """
+"tell application \\"System Events\\" to keystroke \(toPrint)"
+"""]
                     p.launch()
                     p.waitUntilExit()
                 }
             } catch let error {
+                print("Error")
                 print(error)
                 print(error.localizedDescription)
                 exit(1)
