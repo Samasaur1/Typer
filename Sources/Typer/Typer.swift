@@ -14,24 +14,24 @@ public final class Typer {
             }
             var toPrint: String
             if character == "'" {
-                toPrint = "\\\"'\\\""
+                toPrint = "'"
             } else if character == "\n" || character == "\r" {
                 toPrint = "return"
             } else if character == "\t" {
                 toPrint = "tab"
             } else if character == "\\" {
-                toPrint = "\\\"\\\\\\\\\\\""
+                toPrint = "\\\\\\\\"
             } else if character == "\"" {
-                toPrint = "\\\"\\\\\\\"\\\""
+                toPrint = "\\\\\\\\\\\\\""
             } else {
-                toPrint = "\\\\\"\(character)\\\\\""
+                toPrint = "\(character)"
             }
             if debug {
                 print("toPrint:")
                 print(toPrint)
             }
             var osascriptCommand = """
-            "tell application "System Events" to keystroke \(toPrint)"
+            \\"tell application \\\\\\"System Events\\\\\\" to keystroke \\\\\\"\(toPrint)\\\\\\"\\"
             """
             if debug {
                 print("Shell command:")
