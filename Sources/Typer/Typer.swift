@@ -79,6 +79,29 @@ public final class Typer {
                     print("Sleeping for \(0020000 + sleepTime) µseconds")
                 }
                 usleep(0020000 + sleepTime)
+            case .customConsistent(let µsecondDelay):
+                if debug {
+                    print("Sleeping for custom time: \(µsecondDelay) µseconds")
+                }
+                usleep(µsecondDelay)
+            case let .customVarying(µsecondBaseDelay, maxVariance):
+                #if os(Linux)
+                if !initialized {
+                    srandom(UInt32(time(nil)))
+                    initialized = true
+                }
+                let rand = UInt32(random())
+                #else
+                let rand = arc4random()
+                #endif
+                var sleepTime = rand % 5
+                let base = µsecondBaseDelay - maxVariance
+                sleepTime *= (maxVariance / 2)
+                let µsecondDelay = base + sleepTime
+                if debug {
+                    print("Sleeping for custom time (with variance): \(µsecondDelay) µseconds")
+                }
+                usleep(µsecondDelay)
             }
             //usleep(1000000) <- 1 second
 //            usleep(0020000)
@@ -88,5 +111,7 @@ public final class Typer {
         case allAtOnce
         case consistent
         case natural
+        case customConsistent(µsecondDelay: UInt32)
+        case customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32)
     }
 }
