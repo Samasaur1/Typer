@@ -29,33 +29,16 @@ public final class Typer {
                 print("toPrint:")
                 print(toPrint)
             }
-            do {
-                try Data("tell application \"System Events\" to keystroke \(toPrint)".utf8).write(to: URL(fileURLWithPath: "/tmp/typer"), options: .atomic)
+            if let applescript = NSAppleScript(source: "tell app \"System Events\" to keystroke \(toPrint)") {
+                applescript.compileAndReturnError(nil)
+                applescript.executeAndReturnError(nil)
                 if debug {
-                    print("Script Contents:")
-                    print(try String(contentsOf: URL(fileURLWithPath: "/tmp/typer")))
+                    print("AppleScript:")
+                    print(applescript.source!)
                 }
-            } catch let error {
-                print("Error")
-                print(error)
-                print(error.localizedDescription)
+            } else {
+                print("AppleScript initialization error!")
                 exit(1)
-            }
-            let compile = Process()
-            compile.launchPath = "/usr/bin/osacompile"
-            compile.arguments = ["/tmp/typer"]
-            compile.launch()
-            compile.waitUntilExit()
-            let execute = Process()
-            execute.launchPath = "/usr/bin/osascript"
-            execute.arguments = ["/tmp/typer"]
-            execute.launch()
-            execute.waitUntilExit()
-            if !debug {
-                let rm = Process()
-                rm.launchPath = "/bin/rm"
-                rm.arguments = ["/tmp/typer"]
-                rm.launch()
             }
             if printing { print(toPrint) }
             switch typing {
