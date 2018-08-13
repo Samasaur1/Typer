@@ -2,7 +2,7 @@
 // Managed by ice
 
 import PackageDescription
-
+#if swift(>=4)
 let package = Package(
     name: "Typer",
     products: [
@@ -13,3 +13,11 @@ let package = Package(
         .testTarget(name: "TyperTests", dependencies: ["Typer"]),
     ]
 )
+#else
+let package = Package(
+    name: "Typer",
+    targets: [
+        Target(name: "Typer", dependencies: [])
+    ]
+)
+#endif
