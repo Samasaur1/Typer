@@ -73,11 +73,10 @@ public final class Typer {
                     srandom(UInt32(time(nil)))
                     initialized = true
                 }
-                let rand = UInt32(random())
+                var sleepTime = UInt32(random() % 5)
                 #else
-                let rand = arc4random()
+                var sleepTime = arc4random_uniform(5)
                 #endif
-                var sleepTime = rand % 5
                 let base = µsecondBaseDelay - maxVariance
                 sleepTime *= (maxVariance / 2)
                 let µsecondDelay = base + sleepTime
