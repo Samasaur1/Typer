@@ -45,7 +45,7 @@ public final class Typer {
             case .allAtOnce:
                 usleep(0001000)
             case .consistent:
-                usleep(0020000)
+                usleep(0100000)
             case .natural:
                 #if os(Linux)
                 if !initialized {
@@ -57,9 +57,9 @@ public final class Typer {
                 let rand = arc4random()
                 #endif
                 var sleepTime = rand % 5
-                sleepTime *= 15000
+                sleepTime *= 10000
                 if debug {
-                    print("Sleeping for \(0020000 + sleepTime) µseconds")
+                    print("Sleeping for \(0080000 + sleepTime) µseconds")
                 }
                 usleep(0020000 + sleepTime)
             case .customConsistent(let µsecondDelay):
