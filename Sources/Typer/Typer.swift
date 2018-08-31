@@ -86,10 +86,18 @@ public final class Typer {
     /// - customConsistent: The text should be typed at a consistent speed, specified by the associated value.
     /// - customVarying: The text should be typed around a given speed, with 5 possible ranges of variation. Both the base speed and the maximum variance are specified by associated values.
     public enum Rate {
+        /// All the text should be typed at once.
         case allAtOnce
+        /// The text should be typed at a reasonable speed, but with no variance in delay.
         case consistent
+        /// The text should be typed so that it appears natural.
         case natural
+        /// The text should be typed at a specified consistent speed.
+        /// - µsecondDelay: The delay between each key typed.
         case customConsistent(µsecondDelay: UInt32)
+        /// The text should be typed around a specified given speed, with specified variation. The base delay should be the average delay time, and the max variance is the maximum distance from the average to the fastest/slowest possible delay.
+        /// - µsecondBaseDelay: The base delay between each key typed.
+        /// - maxVariance: The delay between each key typed.
         case customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32)
     }
 }
