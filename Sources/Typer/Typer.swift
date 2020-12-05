@@ -53,22 +53,24 @@ public final class Typer {
             case .consistent:
                 usleep(0100000)
             case .natural:
-                var sleepTime = arc4random_uniform(5)
-                sleepTime *= 10000
+                var sleepTime: UInt32 = 0080000
+                sleepTime += arc4random_uniform(5) * 10000
+                sleepTime = additionalVariance(baseRate: sleepTime)
                 if debug {
-                    print("Sleeping for \(0080000 + sleepTime) µseconds")
+                    print("Sleeping for \(sleepTime) µseconds")
                 }
-                usleep(0080000 + sleepTime)
+                usleep(sleepTime)
             case .customConsistent(let µsecondDelay):
                 if debug {
                     print("Sleeping for custom time: \(µsecondDelay) µseconds")
                 }
                 usleep(µsecondDelay)
-            case let .customVarying(µsecondBaseDelay, maxVariance):
+            case let .customVarying(µsecondBaseDelay, maxVariance, additionalRandomness):
                 var sleepTime = arc4random_uniform(5)
-                let base = µsecondBaseDelay - maxVariance
                 sleepTime *= (maxVariance / 2)
-                let µsecondDelay = base + sleepTime
+                let preSubtraction = µsecondBaseDelay + sleepTime
+                let initialDelay = preSubtraction - min(preSubtraction, maxVariance) //ensures that delay is not negative
+                let µsecondDelay = (additionalRandomness ? additionalVariance(baseRate:) : identity(_:))(initialDelay)
                 if debug {
                     print("Sleeping for custom time (with variance): \(µsecondDelay) µseconds")
                 }
@@ -77,6 +79,18 @@ public final class Typer {
             //usleep(1000000) <- 1 second
 //            usleep(0020000)
         }
+    }
+
+    private static func additionalVariance(baseRate: UInt32) -> UInt32 {
+        var base = Int64(baseRate)
+        base += Int64(arc4random_uniform(5) * 1000)
+        base += Int64(arc4random_uniform(11) * 100)
+        base += Int64(arc4random_uniform(21) * 10)
+        base += Int64(arc4random_uniform(21))
+        base -= 2610
+        if base < 0 { return 0 }
+        if base > UInt32.max { return .max }
+        return UInt32(base)
     }
     /// An enum representing possible typing rates.
     ///
@@ -98,6 +112,20 @@ public final class Typer {
         /// The text should be typed around a specified given speed, with specified variation. The base delay should be the average delay time, and the max variance is the maximum distance from the average to the fastest/slowest possible delay.
         /// - µsecondBaseDelay: The base delay between each key typed.
         /// - maxVariance: The delay between each key typed.
-        case customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32)
+        /// - additionalRandomness: Whether or not to add additional randomness. This randomness has a maximum variance of 2610 µseconds.
+        case customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32, additionalRandomness: Bool)
+
+        /// The text should be typed around a specified given speed, with specified variation. The base delay should be the average delay time, and the max variance is the maximum distance from the average to the fastest/slowest possible delay.
+        /// - Parameters:
+        ///   - µsecondBaseDelay: The base delay between each key typed.
+        ///   - maxVariance: The delay between each key typed.
+        @available(*, deprecated, message: "Specify whether or not to have additional randomness")
+        static func customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32) -> Rate {
+            return .customVarying(µsecondBaseDelay: µsecondBaseDelay, maxVariance: maxVariance, additionalRandomness: false)
+        }
     }
+}
+
+private func identity<T>(_ el: T) -> T {
+    return el
 }
