@@ -115,6 +115,7 @@ public final class Typer {
         /// - additionalRandomness: Whether or not to add additional randomness. This randomness has a maximum variance of 2610 µseconds.
         case customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32, additionalRandomness: Bool)
 
+        #if swift(>=4.2)
         /// The text should be typed around a specified given speed, with specified variation. The base delay should be the average delay time, and the max variance is the maximum distance from the average to the fastest/slowest possible delay.
         /// - Parameters:
         ///   - µsecondBaseDelay: The base delay between each key typed.
@@ -123,6 +124,7 @@ public final class Typer {
         static func customVarying(µsecondBaseDelay: UInt32, maxVariance: UInt32) -> Rate {
             return .customVarying(µsecondBaseDelay: µsecondBaseDelay, maxVariance: maxVariance, additionalRandomness: false)
         }
+        #endif
     }
 }
 
